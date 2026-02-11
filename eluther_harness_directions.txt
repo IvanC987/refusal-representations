@@ -1,0 +1,100 @@
+Notes on evaluating Qwen-1.8B-Chat with lm-evaluation-harness
+=========================
+
+1. Setup
+
+Clone and install lm-eval-harness:
+
+    git clone --depth 1 https://github.com/EleutherAI/lm-evaluation-harness.git
+    cd lm-evaluation-harness
+    pip install -e .
+
+
+Run evaluation using:
+
+    lm_eval --model hf \
+           --model_args trust_remote_code=True,pretrained=Qwen/Qwen-1_8B-chat \
+           --tasks arc_easy \
+           --batch_size 32 \
+           --device cuda:0
+
+
+2. Problem
+
+Now bcause qwen v1.x is quite old, there would be an error about dtype:
+
+    TypeError: QWenLMHeadModel.__init__() got an unexpected keyword argument 'dtype'
+
+This occurs because older Qwen versions do not accept the dtype argument passed by the harness.
+
+3. Fix
+In the event anyone would like to reproduce what I have, I'll give brief instructions on what I did:
+
+First, within 'lm-evaluation-harness/lm_eval/models/huggingface.py' locate the function:
+
+    def _create_model(...):
+
+Then find this section:
+
+    self._model = self.AUTO_MODEL_CLASS.from_pretrained(
+        pretrained,
+        revision=revision,
+        dtype=get_dtype(dtype),
+        trust_remote_code=trust_remote_code,
+        gguf_file=gguf_file,
+        quantization_config=quantization_config,
+        subfolder=subfolder,
+        **model_kwargs,
+    )
+
+Before it, add:
+
+            model_kwargs.pop("dtype", None)
+
+To remove the kwarg and remove:
+
+                dtype=get_dtype(dtype),
+
+Within the call. Next, within tok_encode() method, comment out:
+
+    if add_special_tokens is None and has_bos_prefix(
+        string, self.tokenizer.decode(self.prefix_token_id)
+    ):
+        special_tokens_kwargs["add_special_tokens"] = False
+
+And replace with:
+
+    if self.prefix_token_id is not None:
+        try:
+            prefix_str = self.tokenizer.decode([self.prefix_token_id])
+            if add_special_tokens is None and has_bos_prefix(string, prefix_str):
+                special_tokens_kwargs["add_special_tokens"] = False
+        except Exception:
+            pass
+
+Then find tok_decode() and comment out:
+
+    return self.tokenizer.decode(tokens, skip_special_tokens=skip_special_tokens)
+
+then replace with:
+
+    if tokens is None:
+        return ""
+    try:
+        return self.tokenizer.decode(tokens, skip_special_tokens=skip_special_tokens)
+    except Exception:
+        return ""
+
+
+Hacky solution, I know, I know, but hey, it works.
+
+
+4. Notes:
+
+This is primarily a workaround for legacy Qwen 1.x models.
+It does not modify evaluation logic and newer Qwen versions do not require this patch.
+This solution is intended for reproduction purposes of the results I had.
+
+
+
+

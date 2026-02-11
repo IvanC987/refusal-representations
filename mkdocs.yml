@@ -1,0 +1,38 @@
+site_name: Refusal Directions in Instruction-Tuned Models
+
+theme:
+  name: material
+  features:
+    - content.math
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+
+nav:
+  - Home: index.md
+  - Qwen-1.8B-Chat: qwen.md
+  - LLaMA-3.2-1B-Instruct: llama_1b.md
+  - Refusal Across Models: refusal_across_models.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

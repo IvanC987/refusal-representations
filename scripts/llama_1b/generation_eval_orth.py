@@ -1,0 +1,58 @@
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+from refusal_representations.utils import tokenize_prompt
+from refusal_representations.paths import PROJECT_ROOT
+
+
+@torch.no_grad()
+def main():
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tokenizer.pad_token = tokenizer.eos_token
+    eos_token_id = tokenizer.encode(tokenizer.eos_token, add_special_tokens=False)[0]
+
+    model = AutoModelForCausalLM.from_pretrained(model_id).to(device)
+    model.eval()
+
+    while True:
+        try:
+            prompt = input("\n\n>>> Prompt: ").strip()
+            if not prompt:
+                continue
+
+            input_tokens = tokenize_prompt([prompt], tokenizer).to(device)
+
+            for _ in range(max_tokens):
+                logits = model(input_tokens).logits
+                probs = torch.softmax(logits[:, -1, :] / temperature, dim=-1)
+                next_token = torch.argmax(probs, dim=-1)
+
+                input_tokens = torch.cat((input_tokens, next_token.unsqueeze(1)), dim=-1)
+
+                if next_token.item() == eos_token_id:
+                    break
+
+                print(tokenizer.decode([next_token.item()]), end="", flush=True)
+        except KeyboardInterrupt:
+            break
+
+
+if __name__ == "__main__":
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    max_tokens = 200
+    temperature = 1.0
+
+    model_dir = PROJECT_ROOT / "models" / "llama_1b" / "orthogonalized"
+
+    subdirs = sorted([d for d in model_dir.iterdir() if d.is_dir()])
+    assert len(subdirs) > 0, "No orthogonalized models found"
+
+    print("Available orthogonalized models:\n")
+    for i, d in enumerate(subdirs):
+        print(f"[{i}] {d.name}")
+
+    idx = int(input("\nSelect model index: ").strip())
+    model_id = subdirs[idx]
+    # model_id = "meta-llama/Llama-3.2-1B-Instruct"
+
+    main()

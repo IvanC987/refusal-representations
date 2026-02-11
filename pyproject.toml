@@ -1,0 +1,14 @@
+[project]
+name = "refusal_representations"
+version = "0.1.0"
+dependencies = [
+    "torch==2.9.1", "transformers==4.55.0", "transformer_lens==2.17.0"
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
