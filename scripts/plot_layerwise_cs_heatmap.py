@@ -6,13 +6,9 @@ from refusal_representations.paths import PROJECT_ROOT
 
 
 path1 = PROJECT_ROOT / "models" / "llama_8b" / "refusal_analysis" / "sequential_rv_dict_tier_2.pt"
-path1 = PROJECT_ROOT / "models" / "others" / "gemma_2b_it_rv_dict.pt"
-
-# path2 = PROJECT_ROOT / "models" / "qwen" / "refusal_analysis" / "sequential_rv_dict.pt"
 
 dict1 = torch.load(path1, map_location="cpu")
 dict2 = torch.load(path1, map_location="cpu")
-
 
 
 layers = sorted(dict1.keys())

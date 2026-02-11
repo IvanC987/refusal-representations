@@ -8,6 +8,8 @@ experiments/
 misc/
 site/
 
+src/refusal_representations.egg-info/
+
 models/others/
 
 orthogonalized/
