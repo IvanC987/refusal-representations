@@ -672,7 +672,7 @@ v_l = \mathbb{E}[r_l^h] - \mathbb{E}[r_l^s]
 <p>Both extraction methods tell a similar high-level story. Refusal in Qwen-1.8B-Chat is strongly localized to mid-late layers, with little to no stable separation in early layers (layers 1-10). Sequential extraction produces a cleaner, more monotonic rise in separation strength, while batched extraction is noisier and peaks at a lower magnitude.</p>
 <p>To check internal consistency, I computed cosine similarity between refusal vectors across layers (sequential extraction). Diagonal values are 1 by construction; the key pattern is off-diagonal structure.</p>
 <div align="center">
-  <img src="../images/qwen_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
+  <img src="images/qwen_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
 </div>
 
 <p>The bright diagonal block in the mid-late layers shows that once the refusal representation emerges, it becomes highly stable across subsequent layers.</p>
