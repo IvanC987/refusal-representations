@@ -80,7 +80,7 @@ Both extraction methods tell a similar high-level story. Refusal in Qwen-1.8B-Ch
 To check internal consistency, I computed cosine similarity between refusal vectors across layers (sequential extraction). Diagonal values are 1 by construction; the key pattern is off-diagonal structure.
 
 <div align="center">
-  <img src="../images/qwen_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
+  <img src="images/qwen_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
 </div>
 
 The bright diagonal block in the mid-late layers shows that once the refusal representation emerges, it becomes highly stable across subsequent layers.

@@ -13,7 +13,7 @@ When moving up to **LLaMA-3.1-8B-Instruct**, refusal behavior snaps back to look
 The layer-wise cosine similarity heatmap for LLaMA-3.1-8B-Instruct is shown below.
 
 <div align="center">
-  <img src="../images/llama_8b_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
+  <img src="images/llama_8b_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
 </div>
 
 At a glance, this looks very similar to Qwen. A large block of highly similar refusal vectors appears in the later part of the network, indicating that refusal representations converge and remain stable across many layers. This is very different from LLaMA-1B, where similarity drops off quickly away from the diagonal.

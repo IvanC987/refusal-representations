@@ -51,7 +51,7 @@ This indicates strong linear separability at individual layers. However, high se
 To understand how refusal directions relate across layers, I computed layer-wise cosine similarity between sequentially extracted RVs.
 
 <div align="center">
-  <img src="../images/llama_1b_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
+  <img src="images/llama_1b_heatmap.png" alt="Sequential RV cosine similarity heatmap" width="50%">
 </div>
 
 Unlike Qwen, refusal vectors in LLaMA-1B do not collapse into a single stable direction in mid-late layers. Strong alignment is limited to nearby layers, and cosine similarity decays rapidly away from the diagonal. Each layer encodes refusal in a slightly different direction.
